@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { getCategoryColor } from "@/lib/utils";
 import NewsletterForm from "@/components/NewsletterForm";
 
+export const dynamic = "force-dynamic";
+
 const CATEGORIES = [
   { name: "AI", slug: "ai", icon: "🤖", desc: "Artificial Intelligence & Machine Learning" },
   { name: "Python", slug: "python", icon: "🐍", desc: "Python programming language" },
