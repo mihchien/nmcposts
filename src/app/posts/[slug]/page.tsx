@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import CommentSection from "./CommentSection";
 import type { Metadata } from "next";
+import { renderMarkdown } from "@/lib/markdown";
 
 export async function generateMetadata({
   params,
@@ -95,7 +96,7 @@ export default async function PostPage({
       {/* Content */}
       <article
         className="prose dark:prose-invert max-w-none mb-12"
-        dangerouslySetInnerHTML={{ __html: renderMarkdown(post.content) }}
+        dangerouslySetInnerHTML={{ __html: await renderMarkdown(post.content) }}
       />
 
       {/* Tags */}
@@ -136,26 +137,4 @@ export default async function PostPage({
       )}
     </div>
   );
-}
-
-function renderMarkdown(content: string): string {
-  return content
-    .replace(/^---$/gm, "<hr />")
-    .replace(/^### (.+)$/gm, "<h3>$1</h3>")
-    .replace(/^## (.+)$/gm, "<h2>$1</h2>")
-    .replace(/^# (.+)$/gm, "<h1>$1</h1>")
-    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-    .replace(/\*(.+?)\*/g, "<em>$1</em>")
-    .replace(/`(.+?)`/g, "<code>$1</code>")
-    // Images must be processed before links (![...] contains [...])
-    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<figure class="my-6"><img src="$2" alt="$1" class="rounded-xl w-full" /><figcaption class="text-center text-sm text-slate-400 mt-2">$1</figcaption></figure>')
-    .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2">$1</a>')
-    .replace(/^> (.+)$/gm, "<blockquote>$1</blockquote>")
-    .replace(/^- (.+)$/gm, "<li>$1</li>")
-    .replace(/(<li>[\s\S]*?<\/li>)/, "<ul>$1</ul>")
-    .replace(/\n\n/g, "</p><p>")
-    .replace(/^(?!<[h1-6|ul|ol|li|blockquote|pre|code|figure])(.+)$/gm, (match) => {
-      if (match.trim() && !match.startsWith("<")) return `<p>${match}</p>`;
-      return match;
-    });
 }
