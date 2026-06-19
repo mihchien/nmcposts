@@ -14,7 +14,7 @@ interface PostData {
   title?: string;
   excerpt?: string;
   content?: string;
-  categoryId?: number;
+  categoryIds?: number[];
   coverImage?: string;
   published?: boolean;
   featured?: boolean;
@@ -32,17 +32,29 @@ export default function PostForm({
     title: post?.title || "",
     excerpt: post?.excerpt || "",
     content: post?.content || "",
-    categoryId: post?.categoryId?.toString() || (categories[0]?.id?.toString() || ""),
     coverImage: post?.coverImage || "",
     published: post?.published || false,
     featured: post?.featured || false,
   });
+  const [categoryIds, setCategoryIds] = useState<number[]>(
+    post?.categoryIds && post.categoryIds.length > 0
+      ? post.categoryIds
+      : categories[0]
+        ? [categories[0].id]
+        : []
+  );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
   const [uploadMsg, setUploadMsg] = useState("");
 
   const isEditing = !!post?.id;
+
+  function toggleCategory(id: number) {
+    setCategoryIds((prev) =>
+      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
+    );
+  }
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -67,8 +79,14 @@ export default function PostForm({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setSaving(true);
     setError("");
+
+    if (categoryIds.length === 0) {
+      setError("Select at least one category");
+      return;
+    }
+
+    setSaving(true);
 
     try {
       const url = isEditing ? `/api/posts/${post!.id}` : "/api/posts";
@@ -77,7 +95,7 @@ export default function PostForm({
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, categoryId: parseInt(form.categoryId) }),
+        body: JSON.stringify({ ...form, categoryIds }),
       });
 
       if (!res.ok) {
@@ -154,18 +172,30 @@ export default function PostForm({
 
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                Category <span className="text-red-500">*</span>
+                Categories / Tags <span className="text-red-500">*</span>
               </label>
-              <select
-                required
-                value={form.categoryId}
-                onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
-                className="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white text-sm"
-              >
-                {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>{cat.name}</option>
-                ))}
-              </select>
+              <div className="flex flex-wrap gap-2">
+                {categories.map((cat) => {
+                  const selected = categoryIds.includes(cat.id);
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => toggleCategory(cat.id)}
+                      className={`text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
+                        selected
+                          ? "bg-blue-600 border-blue-600 text-white"
+                          : "bg-slate-50 dark:bg-slate-700 border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:border-blue-400"
+                      }`}
+                    >
+                      #{cat.name}
+                    </button>
+                  );
+                })}
+              </div>
+              {categoryIds.length === 0 && (
+                <p className="text-xs text-red-500 mt-1.5">Select at least one category</p>
+              )}
             </div>
 
             <div>

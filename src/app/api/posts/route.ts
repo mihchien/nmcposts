@@ -5,7 +5,7 @@ import { slugify } from "@/lib/utils";
 
 export async function GET() {
   const posts = await prisma.post.findMany({
-    include: { category: true, comments: { where: { approved: false } } },
+    include: { categories: true, comments: { where: { approved: false } } },
     orderBy: { createdAt: "desc" },
   });
   return NextResponse.json(posts);
@@ -16,9 +16,9 @@ export async function POST(req: NextRequest) {
   if (!admin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
-  const { title, excerpt, content, categoryId, coverImage, published, featured } = body;
+  const { title, excerpt, content, categoryIds, coverImage, published, featured } = body;
 
-  if (!title || !excerpt || !content || !categoryId) {
+  if (!title || !excerpt || !content || !Array.isArray(categoryIds) || categoryIds.length === 0) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
@@ -32,12 +32,12 @@ export async function POST(req: NextRequest) {
       slug,
       excerpt,
       content,
-      categoryId: parseInt(categoryId),
+      categories: { connect: categoryIds.map((id: number) => ({ id: parseInt(String(id)) })) },
       coverImage: coverImage || null,
       published: !!published,
       featured: !!featured,
     },
-    include: { category: true },
+    include: { categories: true },
   });
 
   return NextResponse.json(post, { status: 201 });

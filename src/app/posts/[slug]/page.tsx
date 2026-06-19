@@ -13,7 +13,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = await prisma.post.findUnique({
     where: { slug },
-    include: { category: true },
+    include: { categories: true },
   });
   if (!post) return { title: "Post not found" };
   return {
@@ -32,7 +32,7 @@ export default async function PostPage({
   const post = await prisma.post.findUnique({
     where: { slug, published: true },
     include: {
-      category: true,
+      categories: true,
       comments: {
         where: { approved: true },
         orderBy: { createdAt: "desc" },
@@ -45,10 +45,10 @@ export default async function PostPage({
   const relatedPosts = await prisma.post.findMany({
     where: {
       published: true,
-      categoryId: post.categoryId,
+      categories: { some: { id: { in: post.categories.map((c) => c.id) } } },
       id: { not: post.id },
     },
-    include: { category: true },
+    include: { categories: true },
     take: 3,
   });
 
@@ -65,9 +65,13 @@ export default async function PostPage({
 
       {/* Header */}
       <header className="mb-8">
-        <span className={`inline-block text-xs font-semibold px-2.5 py-1 rounded-full mb-4 ${getCategoryColor(post.category.slug)}`}>
-          {post.category.name}
-        </span>
+        <div className="flex flex-wrap gap-2 mb-4">
+          {post.categories.map((cat) => (
+            <span key={cat.id} className={`inline-block text-xs font-semibold px-2.5 py-1 rounded-full ${getCategoryColor(cat.slug)}`}>
+              {cat.name}
+            </span>
+          ))}
+        </div>
         <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white leading-tight mb-4">
           {post.title}
         </h1>
@@ -96,10 +100,12 @@ export default async function PostPage({
 
       {/* Tags */}
       <div className="flex flex-wrap gap-2 py-8 border-t border-slate-200 dark:border-slate-700 mb-8">
-        <Link href={`/posts?category=${post.category.slug}`}
-          className={`text-sm font-medium px-3 py-1 rounded-full ${getCategoryColor(post.category.slug)}`}>
-          #{post.category.name}
-        </Link>
+        {post.categories.map((cat) => (
+          <Link key={cat.id} href={`/posts?category=${cat.slug}`}
+            className={`text-sm font-medium px-3 py-1 rounded-full ${getCategoryColor(cat.slug)}`}>
+            #{cat.name}
+          </Link>
+        ))}
       </div>
 
       {/* Comments */}
@@ -113,9 +119,13 @@ export default async function PostPage({
             {relatedPosts.map((related) => (
               <Link key={related.id} href={`/posts/${related.slug}`}
                 className="group bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 hover:border-blue-300 dark:hover:border-blue-600 transition-all">
-                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${getCategoryColor(related.category.slug)}`}>
-                  {related.category.name}
-                </span>
+                <div className="flex flex-wrap gap-1">
+                  {related.categories.map((cat) => (
+                    <span key={cat.id} className={`text-xs font-semibold px-2 py-0.5 rounded-full ${getCategoryColor(cat.slug)}`}>
+                      {cat.name}
+                    </span>
+                  ))}
+                </div>
                 <h3 className="font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 mt-2 text-sm line-clamp-2">
                   {related.title}
                 </h3>

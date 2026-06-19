@@ -10,7 +10,7 @@ export default async function AdminDashboard() {
   ]);
 
   const recentPosts = await prisma.post.findMany({
-    include: { category: true },
+    include: { categories: true },
     orderBy: { createdAt: "desc" },
     take: 5,
   });
@@ -64,7 +64,7 @@ export default async function AdminDashboard() {
                 <div>
                   <div className="text-sm font-medium text-slate-900 dark:text-white truncate max-w-[200px]">{post.title}</div>
                   <div className="flex items-center gap-2 mt-0.5">
-                    <span className="text-xs text-slate-400">{post.category.name}</span>
+                    <span className="text-xs text-slate-400">{post.categories.map((c) => c.name).join(", ")}</span>
                     <span className={`text-xs px-1.5 py-0.5 rounded-full ${post.published ? "bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400" : "bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400"}`}>
                       {post.published ? "Published" : "Draft"}
                     </span>

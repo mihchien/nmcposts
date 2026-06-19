@@ -28,13 +28,13 @@ export default async function PostsPage({
         { excerpt: { contains: q } },
       ],
     }),
-    ...(categorySlug && { category: { slug: categorySlug } }),
+    ...(categorySlug && { categories: { some: { slug: categorySlug } } }),
   };
 
   const [posts, total, categories] = await Promise.all([
     prisma.post.findMany({
       where,
-      include: { category: true },
+      include: { categories: true },
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * PAGE_SIZE,
       take: PAGE_SIZE,
@@ -123,14 +123,18 @@ export default async function PostsPage({
                   <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover" />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center text-5xl opacity-30">
-                    {post.category.slug === "ai" ? "🤖" : post.category.slug === "programming" ? "💻" : post.category.slug === "robotics" ? "🦾" : "📚"}
+                    {post.categories.some((c) => c.slug === "ai") ? "🤖" : post.categories.some((c) => c.slug === "programming") ? "💻" : post.categories.some((c) => c.slug === "robotics") ? "🦾" : "📚"}
                   </div>
                 )}
               </div>
               <div className="p-5">
-                <span className={`inline-block text-xs font-semibold px-2.5 py-1 rounded-full mb-3 ${getCategoryColor(post.category.slug)}`}>
-                  {post.category.name}
-                </span>
+                <div className="flex flex-wrap gap-1.5 mb-3">
+                  {post.categories.map((cat) => (
+                    <span key={cat.id} className={`inline-block text-xs font-semibold px-2.5 py-1 rounded-full ${getCategoryColor(cat.slug)}`}>
+                      {cat.name}
+                    </span>
+                  ))}
+                </div>
                 <h2 className="font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 mb-2">
                   {post.title}
                 </h2>

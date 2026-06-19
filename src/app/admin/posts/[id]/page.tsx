@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 export default async function EditPostPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const [post, categories] = await Promise.all([
-    prisma.post.findUnique({ where: { id: parseInt(id) } }),
+    prisma.post.findUnique({ where: { id: parseInt(id) }, include: { categories: true } }),
     prisma.category.findMany({ orderBy: { name: "asc" } }),
   ]);
 
@@ -26,7 +26,7 @@ export default async function EditPostPage({ params }: { params: Promise<{ id: s
         title: post.title,
         excerpt: post.excerpt,
         content: post.content,
-        categoryId: post.categoryId,
+        categoryIds: post.categories.map((c) => c.id),
         coverImage: post.coverImage || "",
         published: post.published,
         featured: post.featured,

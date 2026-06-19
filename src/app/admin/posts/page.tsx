@@ -5,7 +5,7 @@ import DeleteButton from "@/components/admin/DeleteButton";
 
 export default async function AdminPostsPage() {
   const posts = await prisma.post.findMany({
-    include: { category: true, comments: { where: { approved: false } } },
+    include: { categories: true, comments: { where: { approved: false } } },
     orderBy: { createdAt: "desc" },
   });
 
@@ -35,7 +35,7 @@ export default async function AdminPostsPage() {
                     {post.featured && <span className="text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 px-1.5 py-0.5 rounded-full">⭐</span>}
                   </div>
                   <div className="flex items-center gap-3 mt-1 flex-wrap">
-                    <span className="text-xs text-slate-400">{post.category.name}</span>
+                    <span className="text-xs text-slate-400">{post.categories.map((c) => c.name).join(", ")}</span>
                     <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${post.published ? "bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400" : "bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400"}`}>
                       {post.published ? "Published" : "Draft"}
                     </span>

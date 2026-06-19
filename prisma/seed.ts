@@ -336,7 +336,7 @@ void loop() {
     await prisma.post.upsert({
       where: { slug: data.slug },
       update: {},
-      create: { ...data, categoryId },
+      create: { ...data, categories: { connect: [{ id: categoryId }] } },
     });
   }
   console.log("✅ Sample posts created");

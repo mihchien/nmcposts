@@ -33,7 +33,7 @@ async function main() {
   const toRemove = existing.filter(c => !newSlugs.includes(c.slug));
 
   for (const cat of toRemove) {
-    const postCount = await prisma.post.count({ where: { categoryId: cat.id } });
+    const postCount = await prisma.post.count({ where: { categories: { some: { id: cat.id } } } });
     if (postCount === 0) {
       await prisma.category.delete({ where: { id: cat.id } });
       console.log(`✗ Removed old category: ${cat.name}`);

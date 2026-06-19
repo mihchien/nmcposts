@@ -7,7 +7,7 @@ export async function GET(_: NextRequest, { params }: { params: Promise<{ id: st
   const { id } = await params;
   const post = await prisma.post.findUnique({
     where: { id: parseInt(id) },
-    include: { category: true, comments: true },
+    include: { categories: true, comments: true },
   });
   if (!post) return NextResponse.json({ error: "Not found" }, { status: 404 });
   return NextResponse.json(post);
@@ -19,7 +19,11 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
   const { id } = await params;
   const body = await req.json();
-  const { title, excerpt, content, categoryId, coverImage, published, featured } = body;
+  const { title, excerpt, content, categoryIds, coverImage, published, featured } = body;
+
+  if (!Array.isArray(categoryIds) || categoryIds.length === 0) {
+    return NextResponse.json({ error: "Select at least one category" }, { status: 400 });
+  }
 
   const existing = await prisma.post.findUnique({ where: { id: parseInt(id) } });
   if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -38,12 +42,12 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       slug,
       excerpt,
       content,
-      categoryId: parseInt(categoryId),
+      categories: { set: categoryIds.map((catId: number) => ({ id: parseInt(String(catId)) })) },
       coverImage: coverImage || null,
       published: !!published,
       featured: !!featured,
     },
-    include: { category: true },
+    include: { categories: true },
   });
 
   return NextResponse.json(post);
