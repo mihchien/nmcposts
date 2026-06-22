@@ -7,7 +7,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
             <div className="flex items-center gap-2 font-bold text-xl text-blue-600 dark:text-blue-400 mb-3">
-              <span className="px-4 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center text-base font-black tracking-wide">NMC</span>
+              <span className="px-4 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center text-base font-black tracking-wide">MCLab</span>
             </div>
             <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
               AI Educator, STEAM Trainer & Software Developer with over 4,000 teaching hours.

@@ -79,7 +79,7 @@ export default async function PostPage({
         </h1>
         <div className="flex items-center gap-4 text-sm text-slate-400">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold">NMC</div>
+            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-[8px] font-bold">MCLab</div>
             <span>Nguyễn Minh Chiến</span>
           </div>
           <span>·</span>

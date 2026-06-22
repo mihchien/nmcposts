@@ -122,7 +122,7 @@ export default async function HomePage() {
                 <div className="nmc-ring-1 absolute w-24 h-24 rounded-full border border-indigo-400/60" />
                 <div className="nmc-ring-2 absolute w-24 h-24 rounded-full border border-purple-400/50" />
                 <div className="nmc-center relative z-10 w-20 h-20 bg-gradient-to-br from-indigo-500 via-blue-600 to-purple-600 rounded-2xl flex flex-col items-center justify-center shadow-2xl">
-                  <span className="text-2xl font-black text-white tracking-tight">NMC</span>
+                  <span className="text-lg font-black text-white tracking-tight">MCLab</span>
                   <span className="text-[9px] text-blue-200 font-medium tracking-widest">EDUCATOR</span>
                 </div>
 

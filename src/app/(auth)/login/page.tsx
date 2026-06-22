@@ -34,8 +34,8 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-white text-2xl font-black mx-auto mb-4">
-            NMC
+          <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-white text-sm font-black mx-auto mb-4">
+            MCLab
           </div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Admin Login</h1>
           <p className="text-slate-400 text-sm mt-1">Manage posts content</p>

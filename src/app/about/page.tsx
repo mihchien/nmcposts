@@ -20,8 +20,8 @@ export default function AboutPage() {
       <section className="mb-16">
         <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
           <div className="flex-shrink-0">
-            <div className="w-36 h-36 bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl flex items-center justify-center text-5xl font-black text-white shadow-2xl">
-              NMC
+            <div className="w-36 h-36 bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl flex items-center justify-center text-3xl font-black text-white shadow-2xl">
+              MCLab
             </div>
           </div>
           <div>

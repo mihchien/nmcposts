@@ -23,7 +23,7 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 font-bold text-xl text-blue-600 dark:text-blue-400">
-          <span className="px-4 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center text-base font-black tracking-wide">NMC</span>
+          <span className="px-4 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center text-base font-black tracking-wide">MCLab</span>
         </Link>
 
         {/* Desktop Nav */}
