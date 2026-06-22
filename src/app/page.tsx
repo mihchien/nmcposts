@@ -79,22 +79,6 @@ export default async function HomePage() {
                   Explore Projects
                 </Link>
               </div>
-
-              {/* Stats */}
-              <div className="flex items-center gap-0 mt-10 w-fit rounded-2xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-sm">
-                {[
-                  { value: "4000+", label: "Teaching Hours", icon: "🎓" },
-                  { value: "1000+", label: "Students", icon: "👥" },
-                ].map((stat, i) => (
-                  <div key={stat.label} className={`flex items-center gap-3 px-6 py-4 ${i !== 0 ? "border-l border-white/10" : ""}`}>
-                    <span className="text-2xl">{stat.icon}</span>
-                    <div>
-                      <div className="text-2xl font-bold text-white leading-none">{stat.value}</div>
-                      <div className="text-xs text-slate-400 mt-0.5">{stat.label}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
 
             {/* Right: Floating Tech Ecosystem */}
