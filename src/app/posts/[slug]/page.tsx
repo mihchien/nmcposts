@@ -3,6 +3,7 @@ import { getCategoryColor } from "@/lib/utils";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import CommentSection from "./CommentSection";
+import ShareButtons from "./ShareButtons";
 import type { Metadata } from "next";
 import { renderMarkdown } from "@/lib/markdown";
 
@@ -86,6 +87,11 @@ export default async function PostPage({
         </div>
       </header>
 
+      {/* Share buttons */}
+      <div className="mb-8">
+        <ShareButtons title={post.title} />
+      </div>
+
       {/* Cover image */}
       {post.coverImage && (
         <div className="aspect-video rounded-2xl overflow-hidden mb-10 bg-slate-200 dark:bg-slate-700">
@@ -100,13 +106,16 @@ export default async function PostPage({
       />
 
       {/* Tags */}
-      <div className="flex flex-wrap gap-2 py-8 border-t border-slate-200 dark:border-slate-700 mb-8">
-        {post.categories.map((cat) => (
-          <Link key={cat.id} href={`/posts?category=${cat.slug}`}
-            className={`text-sm font-medium px-3 py-1 rounded-full ${getCategoryColor(cat.slug)}`}>
-            #{cat.name}
-          </Link>
-        ))}
+      <div className="flex flex-wrap items-center justify-between gap-4 py-8 border-t border-slate-200 dark:border-slate-700 mb-8">
+        <div className="flex flex-wrap gap-2">
+          {post.categories.map((cat) => (
+            <Link key={cat.id} href={`/posts?category=${cat.slug}`}
+              className={`text-sm font-medium px-3 py-1 rounded-full ${getCategoryColor(cat.slug)}`}>
+              #{cat.name}
+            </Link>
+          ))}
+        </div>
+        <ShareButtons title={post.title} />
       </div>
 
       {/* Comments */}
