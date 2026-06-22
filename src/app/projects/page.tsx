@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { getProjectDisplayCategory, getProjectGradient } from "@/lib/utils";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -10,14 +11,6 @@ export const metadata: Metadata = {
 const PROJECT_CATEGORIES = [
   "All", "Personal", "Education", "Students",
 ];
-
-const CATEGORY_MAP: Record<string, string> = {
-  "Cá nhân": "Personal",
-  "Giáo dục": "Education",
-  "Robotics": "Robotics",
-  "Arduino": "Arduino",
-  "Học sinh": "Students",
-};
 
 export default async function ProjectsPage({
   searchParams,
@@ -33,7 +26,7 @@ export default async function ProjectsPage({
 
   const projects = category && category !== "All"
     ? allProjects.filter((p) => {
-        const mapped = CATEGORY_MAP[p.category] || p.category;
+        const mapped = getProjectDisplayCategory(p.category);
         return mapped === category || p.category === category;
       })
     : allProjects;
@@ -68,14 +61,14 @@ export default async function ProjectsPage({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project) => {
             const tags = JSON.parse(project.tags || "[]") as string[];
-            const displayCategory = CATEGORY_MAP[project.category] || project.category;
+            const displayCategory = getProjectDisplayCategory(project.category);
             return (
               <Link
                 key={project.id}
                 href={`/projects/${project.slug}`}
                 className="group bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-600 transition-all"
               >
-                <div className="aspect-video bg-gradient-to-br from-teal-500 to-blue-600 relative">
+                <div className={`aspect-video bg-gradient-to-br ${getProjectGradient(displayCategory)} relative`}>
                   {project.coverImage ? (
                     <img src={project.coverImage} alt={project.title} className="w-full h-full object-cover" />
                   ) : (

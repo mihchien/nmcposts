@@ -1,7 +1,9 @@
 import { prisma } from "@/lib/prisma";
+import { getProjectCategoryColor, getProjectDisplayCategory } from "@/lib/utils";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { renderMarkdown } from "@/lib/markdown";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -35,7 +37,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
       <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
         <div>
-          <span className="inline-block bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 text-xs font-semibold px-2.5 py-1 rounded-full mb-3">
+          <span className={`inline-block text-xs font-semibold px-2.5 py-1 rounded-full mb-3 ${getProjectCategoryColor(getProjectDisplayCategory(project.category))}`}>
             {project.category}
           </span>
           <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">
@@ -77,13 +79,10 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       )}
 
       {project.content && (
-        <article className="prose dark:prose-invert max-w-none">
-          <div dangerouslySetInnerHTML={{
-            __html: project.content
-              .replace(/\n\n/g, "</p><p>")
-              .replace(/^(?!<)(.+)$/gm, "<p>$1</p>")
-          }} />
-        </article>
+        <article
+          className="prose dark:prose-invert max-w-none"
+          dangerouslySetInnerHTML={{ __html: await renderMarkdown(project.content) }}
+        />
       )}
     </div>
   );

@@ -42,3 +42,42 @@ export function getCategoryColor(slug: string) {
     "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300"
   );
 }
+
+export const PROJECT_CATEGORY_MAP: Record<string, string> = {
+  "Cá nhân": "Personal",
+  "Giáo dục": "Education",
+  "Robotics": "Robotics",
+  "Arduino": "Arduino",
+  "Học sinh": "Students",
+};
+
+export function getProjectDisplayCategory(category: string) {
+  return PROJECT_CATEGORY_MAP[category] || category;
+}
+
+export const PROJECT_CATEGORY_GRADIENTS: Record<string, string> = {
+  Personal: "from-blue-500 to-indigo-600",
+  Education: "from-emerald-500 to-green-600",
+  Robotics: "from-rose-500 to-red-600",
+  Arduino: "from-teal-500 to-cyan-600",
+  Students: "from-violet-500 to-purple-600",
+};
+
+export function getProjectGradient(category: string) {
+  return PROJECT_CATEGORY_GRADIENTS[category] || "from-slate-500 to-slate-700";
+}
+
+export const PROJECT_CATEGORY_COLORS: Record<string, string> = {
+  Personal: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
+  Education: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300",
+  Robotics: "bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300",
+  Arduino: "bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300",
+  Students: "bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-300",
+};
+
+export function getProjectCategoryColor(category: string) {
+  return (
+    PROJECT_CATEGORY_COLORS[category] ||
+    "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300"
+  );
+}
